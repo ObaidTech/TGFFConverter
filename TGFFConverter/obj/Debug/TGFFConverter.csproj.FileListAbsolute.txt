@@ -1,0 +1,9 @@
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.exe.config
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.csprojResolveAssemblyReference.cache
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.Form1.resources
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.Properties.Resources.resources
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.csproj.GenerateResource.Cache
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.exe
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.pdb
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.exe
+c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.pdb
