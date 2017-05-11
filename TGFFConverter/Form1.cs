@@ -87,7 +87,7 @@ namespace TGFFConverter
                     // Read all text in input file and save it in input graph
                     inputGraph = File.ReadAllText(inputGraphLocation);
                     string[] inputLines = inputGraph.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    for(int lineNo = 0; lineNo < inputLines.Length; lineNo++)
+                    for (int lineNo = 0; lineNo < inputLines.Length; lineNo++)
                     {
                         int taskgraphBeginLine = lineNo;
                         int taskgraphEndLine = lineNo;
@@ -98,9 +98,9 @@ namespace TGFFConverter
                             // This is the start of task graph
                             ApplicationMode newMode = new ApplicationMode();
                             // Check where this task graph ends
-                            for(int endingBracketLine = lineNo; endingBracketLine < inputLines.Length; endingBracketLine++)
+                            for (int endingBracketLine = lineNo; endingBracketLine < inputLines.Length; endingBracketLine++)
                             {
-                                if(inputLines[endingBracketLine].Contains("}"))
+                                if (inputLines[endingBracketLine].Contains("}"))
                                 {
                                     // This is the ending
                                     taskgraphEndLine = endingBracketLine;
@@ -115,11 +115,11 @@ namespace TGFFConverter
                             // Console.WriteLine("Found Graph " + graphNo);
                             newMode.modeID = graphNo;
                             // Go through inside the coregraph lines and search for edges
-                            for(int edgeLines = lineNo; edgeLines < taskgraphEndLine; edgeLines++)
+                            for (int edgeLines = lineNo; edgeLines < taskgraphEndLine; edgeLines++)
                             {
                                 string edgeLineText = inputLines[edgeLines];
                                 // If there is an edge identifier "ARC"
-                                if(edgeLineText.Contains("ARC"))
+                                if (edgeLineText.Contains("ARC"))
                                 {
                                     // This is an edge
                                     Edge newEdge = new Edge();
@@ -163,7 +163,7 @@ namespace TGFFConverter
                                     try
                                     {
                                         Core foundCore = cores.Find(x => x.id == newCore.id);
-                                        if(foundCore == null)
+                                        if (foundCore == null)
                                         {
                                             cores.Add(newCore);
                                         }
@@ -254,20 +254,20 @@ namespace TGFFConverter
                         }
                     }
                     // Now that we have all application modes, let's build a XML file
-                    XElement appElement = new XElement("Application", new XAttribute("Id","0"), new XAttribute("Name", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)),
-                            new XElement("Cores", 
+                    XElement appElement = new XElement("Application", new XAttribute("Id", "0"), new XAttribute("Name", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)),
+                            new XElement("Cores",
                                 from core in cores
                                 select
-                                    new XElement("Core",new XAttribute("Id",core.id.ToString()), new XAttribute("Name","Core "+core.id.ToString()))),
+                                    new XElement("Core", new XAttribute("Id", core.id.ToString()), new XAttribute("Name", "Core " + core.id.ToString()))),
                             from mode in applicationModes
                             select
-                                    new XElement("CoreGraph", new XAttribute("Id",mode.modeID.ToString()), new XAttribute("Name","Mode "+mode.modeID.ToString()),
-                                                new XElement("Edges", 
+                                    new XElement("CoreGraph", new XAttribute("Id", mode.modeID.ToString()), new XAttribute("Name", "Mode " + mode.modeID.ToString()),
+                                                new XElement("Edges",
                                                     from edge in mode.commEdges
                                                     select
-                                                        new XElement("Edge", 
-                                                        new XAttribute("Id",edge.edgeID.ToString()), 
-                                                        new XAttribute("From",edge.start.ToString()),
+                                                        new XElement("Edge",
+                                                        new XAttribute("Id", edge.edgeID.ToString()),
+                                                        new XAttribute("From", edge.start.ToString()),
                                                         new XAttribute("To", edge.end.ToString()),
                                                         new XAttribute("Volume", edge.volume.ToString())
                                                         )
@@ -276,7 +276,7 @@ namespace TGFFConverter
                      );
                     XDocument doc = new XDocument(appElement);
                     // If the file already exsists, erase it completely
-                    if(File.Exists(saveFileDialog1.FileName))
+                    if (File.Exists(saveFileDialog1.FileName))
                     {
                         File.WriteAllText(saveFileDialog1.FileName, string.Empty);
                     }
@@ -303,6 +303,49 @@ namespace TGFFConverter
 
         private void generateBtn_Click(object sender, EventArgs e)
         {
+            List<Core> cores = new List<Core>();
+            List<ApplicationMode> aModes = new List<ApplicationMode>();
+            generateTraffic(cores, aModes);
+            // STEP 3: Generating XML from objects
+            makeCoregraphXMLFile(cores, aModes);
+        }
+
+        private string addZeros(string addressInBits, int requiredSize)
+        {
+            if (addressInBits.Length > requiredSize)
+            {
+                // This should not be possible
+                return "";
+            }
+            else
+            {
+                string temp = addressInBits;
+                while (temp.Length != requiredSize)
+                {
+                    temp = "0" + temp;
+                }
+                return temp;
+            }
+        }
+
+        private string getThatDigit(string id, int index)
+        {
+            string temp = id.Substring(id.Length - index - 1, 1);
+            return temp;
+        }
+
+        private string everydayImShuffling(string id, int times)
+        {
+            string temp = id;
+            for (int i = 0; i < times; i++)
+            {
+                temp = shuffle(temp);
+            }
+            return temp;
+        }
+
+        private void generateTraffic(List<Core> cores, List<ApplicationMode> aModes)
+        {
             Random rnd = new Random();
             int noOfCores = 0;
             int noOfModes = 0;
@@ -312,17 +355,18 @@ namespace TGFFConverter
                 noOfCores = Int32.Parse(coresTxtBox.Text);
                 noOfModes = Int32.Parse(modeTxtBox.Text);
                 packetSize = Int32.Parse(sizeTxtBox.Text);
-            } catch (Exception esd)
+            }
+            catch (Exception esd)
             {
                 MessageBox.Show("Correct the format of '# of Cores' or '# of Modes'\nDetailed Message:\n" + esd.Message, "Parse Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if((trafficTypeBox.SelectedIndex == (int)trafficType.Tornado || trafficTypeBox.SelectedIndex == (int)trafficType.Neighbour) && (Math.Log(noOfCores, 2.00) % 1 != 0))
+            if ((trafficTypeBox.SelectedIndex == (int)trafficType.Tornado || trafficTypeBox.SelectedIndex == (int)trafficType.Neighbour) && (Math.Log(noOfCores, 2.00) % 1 != 0))
             {
                 MessageBox.Show("Cannot generate Digit Permutated traffic for meshes which # of cores is not power of 2.\n 2^n = # of cores where n should be an integer. \n 2^(" + Math.Log(noOfCores, 2.00) + ") = " + noOfCores, "Generation Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            int width = (int) Math.Ceiling(Math.Sqrt(noOfCores));
+            int width = (int)Math.Ceiling(Math.Sqrt(noOfCores));
             int height = width;
             // k, aka radix, is the size of one dimension
             int k = height;
@@ -330,7 +374,6 @@ namespace TGFFConverter
             int b = (int)Math.Ceiling(Math.Log(noOfCores, 2.00));
 
             // STEP 1: Generating all cores
-            List<Core> cores = new List<Core>();
             for (int i = 0; i < noOfCores; i++)
             {
                 Core c = new Core();
@@ -338,15 +381,13 @@ namespace TGFFConverter
                 cores.Add(c);
             }
             // STEP 2: Generating all application modes with edges
-            List<ApplicationMode> aModes = new List<ApplicationMode>();
-
             for (int modeId = 0; modeId < noOfModes; modeId++)
             {
                 ApplicationMode am = new ApplicationMode();
                 am.modeID = modeId;
                 List<Edge> edges = new List<Edge>();
                 int unluckyCore = 0;
-                if (trafficTypeBox.SelectedIndex == (int) trafficType.Hot_Spot)
+                if (trafficTypeBox.SelectedIndex == (int)trafficType.Hot_Spot)
                 {
                     // Pick a hotspot
                     unluckyCore = rnd.Next(0, noOfCores);
@@ -363,12 +404,12 @@ namespace TGFFConverter
                     string destinationId = "";
                     switch (trafficTypeBox.SelectedIndex)
                     {
-                        case (int) trafficType.Random:
+                        case (int)trafficType.Random:
                             {
                                 // Random Selected
                                 for (int dest = 0; dest < noOfCores; dest++)
                                 {
-                                    if(dest != source)
+                                    if (dest != source)
                                     {
                                         Edge e2 = new Edge();
                                         e2.edgeID = source;
@@ -387,9 +428,9 @@ namespace TGFFConverter
                             {
                                 int edgesToGenForThisSource = rnd.Next(0, noOfCores);
                                 List<int> pool = new List<int>();
-                                for(int i = 0; i < noOfCores; i++)
+                                for (int i = 0; i < noOfCores; i++)
                                 {
-                                    if(i != source)
+                                    if (i != source)
                                     {
                                         pool.Add(i);
                                     }
@@ -407,19 +448,19 @@ namespace TGFFConverter
                                 }
                                 break;
                             }
-                        case (int) trafficType.Bit_Reversal:
+                        case (int)trafficType.Bit_Reversal:
                             {
                                 // Bit Reversal Selected
-                                for(int i = 0; i < b; i++)
+                                for (int i = 0; i < b; i++)
                                 {
                                     destinationId = destinationId + getThatDigit(sourceId, i);
                                 }
                                 break;
                             }
-                        case (int) trafficType.Shuffle:
+                        case (int)trafficType.Shuffle:
                             {
                                 // Shuffle Selected
-                                if(source == 0)
+                                if (source == 0)
                                 {
                                     // This is the first one, assign it last one
                                     destinationId = Convert.ToString(noOfCores - 1, 2);
@@ -434,7 +475,7 @@ namespace TGFFConverter
                                 }
                                 break;
                             }
-                        case (int) trafficType.Transpose_Matrix:
+                        case (int)trafficType.Transpose_Matrix:
                             {
                                 // Transpose Matrix Selected
                                 for (int dest_digit = 0; dest_digit < b; dest_digit++)
@@ -446,23 +487,23 @@ namespace TGFFConverter
                                 }
                                 break;
                             }
-                        case (int) trafficType.Tornado:
+                        case (int)trafficType.Tornado:
                             {
                                 // Tornado Selected
                                 for (int dest_digit = 0; dest_digit < b; dest_digit++)
                                 {
-                                    int numerator = (int) (Math.Ceiling(((double)k) / 2.00) - 1);
+                                    int numerator = (int)(Math.Ceiling(((double)k) / 2.00) - 1);
                                     int sourceDigit = Convert.ToInt32(getThatDigit(sourceId, dest_digit), 2);
-                                    int calculation = (int) (sourceDigit + numerator % k);
-                                    string newDestDigit = getThatDigit(Convert.ToString(calculation, 2),0);
+                                    int calculation = (int)(sourceDigit + numerator % k);
+                                    string newDestDigit = getThatDigit(Convert.ToString(calculation, 2), 0);
                                     destinationId = newDestDigit + destinationId;
                                 }
                                 break;
                             }
-                        case (int) trafficType.Neighbour:
+                        case (int)trafficType.Neighbour:
                             {
                                 // Neighbor Selected
-                                if(((source + 1) % k == 0) && (source != (noOfCores - 1)))
+                                if (((source + 1) % k == 0) && (source != (noOfCores - 1)))
                                 {
                                     // Last column but not right-bottom corner
                                     destinationId = Convert.ToString(source + 1, 2);
@@ -484,14 +525,14 @@ namespace TGFFConverter
                                 }
                                 break;
                             }
-                        case (int) trafficType.Hot_Spot:
+                        case (int)trafficType.Hot_Spot:
                             {
                                 // Hot Spot Selected
                                 destinationId = Convert.ToString(unluckyCore, 2);
                                 break;
                             }
                     }
-                    if (trafficTypeBox.SelectedIndex != (int) trafficType.Random && trafficTypeBox.SelectedIndex != (int) trafficType.Random_Modal)
+                    if (trafficTypeBox.SelectedIndex != (int)trafficType.Random && trafficTypeBox.SelectedIndex != (int)trafficType.Random_Modal)
                     {
                         ee.end = Convert.ToInt32(destinationId, 2);
                         if (ee.end < noOfCores && destinationId != sourceId)
@@ -505,42 +546,6 @@ namespace TGFFConverter
                 aModes.Add(am);
             }
 
-            // STEP 3: Generating XML from objects
-            makeCoregraphXMLFile(cores, aModes);
-        }
-
-        private string addZeros(string addressInBits, int requiredSize)
-        {
-            if(addressInBits.Length > requiredSize)
-            {
-                // This should not be possible
-                return "";
-            }
-            else
-            {
-                string temp = addressInBits;
-                while(temp.Length != requiredSize)
-                {
-                    temp = "0" + temp;
-                }
-                return temp;
-            }
-        }
-
-        private string getThatDigit(string id, int index)
-        {
-            string temp = id.Substring(id.Length - index - 1,1);
-            return temp;
-        }
-
-        private string everydayImShuffling(string id, int times)
-        {
-            string temp = id;
-            for(int i = 0; i < times; i++)
-            {
-                temp = shuffle(temp);
-            }
-            return temp;
         }
 
         private string shuffle(string id)
@@ -598,6 +603,46 @@ namespace TGFFConverter
             }
         }
 
+        private void saveCoregraphXMLFile(List<Core> cores, List<ApplicationMode> appModes, String fileName)
+        {
+            try
+            {
+                // Now that we have all application modes, let's build a XML file
+                XElement appElement = new XElement("Application", new XAttribute("Id", "0"), new XAttribute("Name", Path.GetFileNameWithoutExtension(fileName)),
+                    new XElement("Cores",
+                        from core in cores
+                        select
+                            new XElement("Core", new XAttribute("Id", core.id.ToString()), new XAttribute("Name", "Core " + core.id.ToString()))),
+                    from mode in appModes
+                    select
+                            new XElement("CoreGraph", new XAttribute("Id", mode.modeID.ToString()), new XAttribute("Name", "Mode " + mode.modeID.ToString()),
+                                        new XElement("Edges",
+                                            from edge in mode.commEdges
+                                            select
+                                                new XElement("Edge",
+                                                new XAttribute("Id", edge.edgeID.ToString()),
+                                                new XAttribute("From", edge.start.ToString()),
+                                                new XAttribute("To", edge.end.ToString()),
+                                                new XAttribute("Volume", edge.volume.ToString())
+                                                )
+                                        )
+                            )
+                );
+                XDocument doc = new XDocument(appElement);
+                // If the file already exsists, erase it completely
+                if (File.Exists(fileName))
+                {
+                    File.WriteAllText(fileName, string.Empty);
+                }
+                doc.Save(fileName);
+                Console.WriteLine("All Done");
+            }
+            catch (Exception ep)
+            {
+                MessageBox.Show(ep.Message, "Error Generating Application Core Graph XML file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void unUsedFunction()
         {
             int noOfCores = 0;
@@ -624,6 +669,69 @@ namespace TGFFConverter
             int minIndex = diffs.IndexOf(diffs.Min());
             int width = widths.ElementAt(minIndex);
             int height = heights.ElementAt(minIndex);
+        }
+
+        private string getTrafficType(int typeNo)
+        {
+            switch(typeNo)
+            {
+                case (int)trafficType.Bit_Reversal: { return "Bit_Reversal"; }
+                case (int)trafficType.Hot_Spot: { return "Hot_Spot"; }
+                case (int)trafficType.Neighbour: { return "Neighbour"; }
+                case (int)trafficType.Random: { return "Random_Uniform"; }
+                case (int)trafficType.Random_Modal: { return "Random_Modal"; }
+                case (int)trafficType.Shuffle: { return "Shuffle"; }
+                case (int)trafficType.Tornado: { return "Tornado"; }
+                case (int)trafficType.Transpose_Matrix: { return "Transpose_Matrix"; }
+                default: return "Unknown";
+            }
+        }
+
+        private void autoGenBtn_Click(object sender, EventArgs e)
+        {
+            string savePath = "";
+            FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+            DialogResult result = folderBrowserDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                savePath = folderBrowserDialog1.SelectedPath;
+            }
+            else
+            {
+                return;
+            }
+            sizeTxtBox.Text = "100";
+            for(int trafficT = 0; trafficT < trafficTypeBox.Items.Count; trafficT++)
+            {
+                trafficTypeBox.SelectedIndex = trafficT;
+                if(trafficT == (int)trafficType.Random || trafficT == (int)trafficType.Transpose_Matrix || trafficT == (int)trafficType.Tornado || trafficT == (int)trafficType.Neighbour)
+                {
+                    modeTxtBox.Text = "1";
+                    for (int coresT = 16; coresT < 257; coresT = coresT * 2)
+                    {
+                        coresTxtBox.Text = coresT.ToString();
+                        List<Core> cores = new List<Core>();
+                        List<ApplicationMode> aModes = new List<ApplicationMode>();
+                        generateTraffic(cores, aModes);
+                        saveCoregraphXMLFile(cores, aModes, savePath + "\\" + getTrafficType(trafficT) + "_" + coresT.ToString() + "_Cores.xml");
+                    }
+                }
+                else
+                {
+                    for (int modesT = 1; modesT < 6; modesT++)
+                    {
+                        modeTxtBox.Text = modesT.ToString();
+                        for (int coresT = 16; coresT < 257; coresT = coresT * 2)
+                        {
+                            coresTxtBox.Text = coresT.ToString();
+                            List<Core> cores = new List<Core>();
+                            List<ApplicationMode> aModes = new List<ApplicationMode>();
+                            generateTraffic(cores, aModes);
+                            saveCoregraphXMLFile(cores, aModes, savePath + "\\" + getTrafficType(trafficT) + "_" + modesT.ToString() + "_Modes_" + coresT.ToString() + "_Cores.xml");
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -118,22 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Traffic-light-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Traffic-light-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Status-dialog-information-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Status-dialog-information-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Arrow-Up-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Arrow-Up-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="trafficInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\trafficInfo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Traffic-light-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Traffic-light-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="science-chemistry-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\science-chemistry-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Status-dialog-information-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Status-dialog-information-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="MadHatter-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MadHatter-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="trafficInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\trafficInfo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="rocket-launch-run-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rocket-launch-run-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

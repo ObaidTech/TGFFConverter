@@ -83,6 +83,16 @@ namespace TGFFConverter.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap rocket_launch_run_icon {
+            get {
+                object obj = ResourceManager.GetObject("rocket-launch-run-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap science_chemistry_icon {
             get {
                 object obj = ResourceManager.GetObject("science-chemistry-icon", resourceCulture);
