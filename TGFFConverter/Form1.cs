@@ -20,6 +20,19 @@ namespace TGFFConverter
         string outputGraph = String.Empty;
         List<ApplicationMode> applicationModes;
         List<Core> cores;
+
+        enum trafficType
+        {
+            Random = 0,
+            Random_Modal,
+            Bit_Reversal,
+            Shuffle,
+            Transpose_Matrix,
+            Tornado,
+            Neighbour,
+            Hot_Spot
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -275,6 +288,342 @@ namespace TGFFConverter
                     MessageBox.Show(ex.Message, "Error Generating Application Core Graph", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void infoBtn_Click(object sender, EventArgs e)
+        {
+            InfoForm infoDialog = new InfoForm();
+            infoDialog.ShowDialog();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            trafficTypeBox.SelectedIndex = 5;
+        }
+
+        private void generateBtn_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            int noOfCores = 0;
+            int noOfModes = 0;
+            int packetSize = 0;
+            try
+            {
+                noOfCores = Int32.Parse(coresTxtBox.Text);
+                noOfModes = Int32.Parse(modeTxtBox.Text);
+                packetSize = Int32.Parse(sizeTxtBox.Text);
+            } catch (Exception esd)
+            {
+                MessageBox.Show("Correct the format of '# of Cores' or '# of Modes'\nDetailed Message:\n" + esd.Message, "Parse Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if((trafficTypeBox.SelectedIndex == (int)trafficType.Tornado || trafficTypeBox.SelectedIndex == (int)trafficType.Neighbour) && (Math.Log(noOfCores, 2.00) % 1 != 0))
+            {
+                MessageBox.Show("Cannot generate Digit Permutated traffic for meshes which # of cores is not power of 2.\n 2^n = # of cores where n should be an integer. \n 2^(" + Math.Log(noOfCores, 2.00) + ") = " + noOfCores, "Generation Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int width = (int) Math.Ceiling(Math.Sqrt(noOfCores));
+            int height = width;
+            // k, aka radix, is the size of one dimension
+            int k = height;
+            // b, aka size of address in bits
+            int b = (int)Math.Ceiling(Math.Log(noOfCores, 2.00));
+
+            // STEP 1: Generating all cores
+            List<Core> cores = new List<Core>();
+            for (int i = 0; i < noOfCores; i++)
+            {
+                Core c = new Core();
+                c.id = i;
+                cores.Add(c);
+            }
+            // STEP 2: Generating all application modes with edges
+            List<ApplicationMode> aModes = new List<ApplicationMode>();
+
+            for (int modeId = 0; modeId < noOfModes; modeId++)
+            {
+                ApplicationMode am = new ApplicationMode();
+                am.modeID = modeId;
+                List<Edge> edges = new List<Edge>();
+                int unluckyCore = 0;
+                if (trafficTypeBox.SelectedIndex == (int) trafficType.Hot_Spot)
+                {
+                    // Pick a hotspot
+                    unluckyCore = rnd.Next(0, noOfCores);
+                }
+                for (int source = 0; source < noOfCores; source++)
+                {
+                    // Convert the source integer id to binary string id
+                    string sourceId = Convert.ToString(source, 2);
+                    sourceId = addZeros(sourceId, b);
+                    Edge ee = new Edge();
+                    ee.edgeID = source;
+                    ee.start = source;
+                    ee.volume = packetSize;
+                    string destinationId = "";
+                    switch (trafficTypeBox.SelectedIndex)
+                    {
+                        case (int) trafficType.Random:
+                            {
+                                // Random Selected
+                                for (int dest = 0; dest < noOfCores; dest++)
+                                {
+                                    if(dest != source)
+                                    {
+                                        Edge e2 = new Edge();
+                                        e2.edgeID = source;
+                                        e2.start = source;
+                                        e2.volume = packetSize;
+                                        e2.end = dest;
+                                        if (e2.end < noOfCores)
+                                        {
+                                            edges.Add(e2);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        case (int)trafficType.Random_Modal:
+                            {
+                                int edgesToGenForThisSource = rnd.Next(0, noOfCores);
+                                List<int> pool = new List<int>();
+                                for(int i = 0; i < noOfCores; i++)
+                                {
+                                    if(i != source)
+                                    {
+                                        pool.Add(i);
+                                    }
+                                }
+                                for (int edgeNo = 0; edgeNo < edgesToGenForThisSource; edgeNo++)
+                                {
+                                    int pickedDest = rnd.Next(0, pool.Count);
+                                    Edge e2 = new Edge();
+                                    e2.edgeID = edges.Count;
+                                    e2.start = source;
+                                    e2.volume = packetSize;
+                                    e2.end = pool.ElementAt(pickedDest);
+                                    pool.RemoveAt(pickedDest);
+                                    edges.Add(e2);
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Bit_Reversal:
+                            {
+                                // Bit Reversal Selected
+                                for(int i = 0; i < b; i++)
+                                {
+                                    destinationId = destinationId + getThatDigit(sourceId, i);
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Shuffle:
+                            {
+                                // Shuffle Selected
+                                if(source == 0)
+                                {
+                                    // This is the first one, assign it last one
+                                    destinationId = Convert.ToString(noOfCores - 1, 2);
+                                }
+                                else if (source == noOfCores - 1)
+                                {
+                                    destinationId = Convert.ToString(0, 2);
+                                }
+                                else
+                                {
+                                    destinationId = everydayImShuffling(sourceId, modeId + 1);
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Transpose_Matrix:
+                            {
+                                // Transpose Matrix Selected
+                                for (int dest_digit = 0; dest_digit < b; dest_digit++)
+                                {
+                                    int numerator = (int)(dest_digit + (b / 2.00));
+                                    int calculation = (int)(numerator % b);
+                                    string newDestDigit = getThatDigit(sourceId, calculation);
+                                    destinationId = newDestDigit + destinationId;
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Tornado:
+                            {
+                                // Tornado Selected
+                                for (int dest_digit = 0; dest_digit < b; dest_digit++)
+                                {
+                                    int numerator = (int) (Math.Ceiling(((double)k) / 2.00) - 1);
+                                    int sourceDigit = Convert.ToInt32(getThatDigit(sourceId, dest_digit), 2);
+                                    int calculation = (int) (sourceDigit + numerator % k);
+                                    string newDestDigit = getThatDigit(Convert.ToString(calculation, 2),0);
+                                    destinationId = newDestDigit + destinationId;
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Neighbour:
+                            {
+                                // Neighbor Selected
+                                if(((source + 1) % k == 0) && (source != (noOfCores - 1)))
+                                {
+                                    // Last column but not right-bottom corner
+                                    destinationId = Convert.ToString(source + 1, 2);
+                                }
+                                else if (source >= (noOfCores - k) && (source != (noOfCores - 1)))
+                                {
+                                    // Last row but not right-bottom corner
+                                    int colNo = (source + 1) % k;
+                                    destinationId = Convert.ToString(colNo, 2);
+                                }
+                                else if (source == (noOfCores - 1))
+                                {
+                                    // right - bottom corner
+                                    destinationId = Convert.ToString(0, 2);
+                                }
+                                else
+                                {
+                                    destinationId = Convert.ToString(source + k + 1, 2);
+                                }
+                                break;
+                            }
+                        case (int) trafficType.Hot_Spot:
+                            {
+                                // Hot Spot Selected
+                                destinationId = Convert.ToString(unluckyCore, 2);
+                                break;
+                            }
+                    }
+                    if (trafficTypeBox.SelectedIndex != (int) trafficType.Random && trafficTypeBox.SelectedIndex != (int) trafficType.Random_Modal)
+                    {
+                        ee.end = Convert.ToInt32(destinationId, 2);
+                        if (ee.end < noOfCores && destinationId != sourceId)
+                        {
+                            // This should not be done for any random traffic pattern
+                            edges.Add(ee);
+                        }
+                    }
+                }
+                am.commEdges = edges;
+                aModes.Add(am);
+            }
+
+            // STEP 3: Generating XML from objects
+            makeCoregraphXMLFile(cores, aModes);
+        }
+
+        private string addZeros(string addressInBits, int requiredSize)
+        {
+            if(addressInBits.Length > requiredSize)
+            {
+                // This should not be possible
+                return "";
+            }
+            else
+            {
+                string temp = addressInBits;
+                while(temp.Length != requiredSize)
+                {
+                    temp = "0" + temp;
+                }
+                return temp;
+            }
+        }
+
+        private string getThatDigit(string id, int index)
+        {
+            string temp = id.Substring(id.Length - index - 1,1);
+            return temp;
+        }
+
+        private string everydayImShuffling(string id, int times)
+        {
+            string temp = id;
+            for(int i = 0; i < times; i++)
+            {
+                temp = shuffle(temp);
+            }
+            return temp;
+        }
+
+        private string shuffle(string id)
+        {
+            string firstBit = id.Substring(0,1);
+            string remaining = id.Substring(1, id.Length - 1);
+            return (remaining + firstBit);
+        }
+
+        private void makeCoregraphXMLFile(List<Core> cores, List<ApplicationMode> appModes)
+        {
+            try
+            {
+                // Displays a SaveFileDialog so the user can save the Image
+                // assigned to Button2.
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.Filter = "Application Graph XML|*.xml";
+                saveFileDialog1.Title = "Save XML File";
+                saveFileDialog1.ShowDialog();
+                // If the file name is not an empty string open it for saving.
+                if (saveFileDialog1.FileName != "")
+                {
+                    // Now that we have all application modes, let's build a XML file
+                    XElement appElement = new XElement("Application", new XAttribute("Id", "0"), new XAttribute("Name", Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)),
+                        new XElement("Cores",
+                            from core in cores
+                            select
+                                new XElement("Core", new XAttribute("Id", core.id.ToString()), new XAttribute("Name", "Core " + core.id.ToString()))),
+                        from mode in appModes
+                        select
+                                new XElement("CoreGraph", new XAttribute("Id", mode.modeID.ToString()), new XAttribute("Name", "Mode " + mode.modeID.ToString()),
+                                            new XElement("Edges",
+                                                from edge in mode.commEdges
+                                                select
+                                                    new XElement("Edge",
+                                                    new XAttribute("Id", edge.edgeID.ToString()),
+                                                    new XAttribute("From", edge.start.ToString()),
+                                                    new XAttribute("To", edge.end.ToString()),
+                                                    new XAttribute("Volume", edge.volume.ToString())
+                                                    )
+                                            )
+                                )
+                    );
+                    XDocument doc = new XDocument(appElement);
+                    // If the file already exsists, erase it completely
+                    if (File.Exists(saveFileDialog1.FileName))
+                    {
+                        File.WriteAllText(saveFileDialog1.FileName, string.Empty);
+                    }
+                    doc.Save(saveFileDialog1.FileName);
+                    Console.WriteLine("All Done");
+                }
+            } catch (Exception ep) {
+                MessageBox.Show(ep.Message, "Error Generating Application Core Graph XML file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void unUsedFunction()
+        {
+            int noOfCores = 0;
+            int noOfModes = 0;
+            List<int> widths = new List<int>();
+            for (int i = 1; i <= noOfCores; i++)
+            {
+                int remainder = noOfCores % i;
+                if (remainder == 0)
+                {
+                    widths.Add(i);
+                }
+            }
+            List<int> heights = new List<int>();
+            foreach (int wid in widths)
+            {
+                heights.Add(noOfCores / wid);
+            }
+            List<int> diffs = new List<int>();
+            for (int i = 0; i < widths.Count(); i++)
+            {
+                diffs.Add(Math.Abs(widths.ElementAt(i) - heights.ElementAt(i)));
+            }
+            int minIndex = diffs.IndexOf(diffs.Min());
+            int width = widths.ElementAt(minIndex);
+            int height = heights.ElementAt(minIndex);
         }
     }
 }

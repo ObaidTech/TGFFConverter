@@ -7,3 +7,16 @@ c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConv
 c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.pdb
 c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.exe
 c:\users\obaidullah\documents\visual studio 2015\Projects\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.pdb
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.exe.config
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.exe
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\bin\Debug\TGFFConverter.pdb
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.csprojResolveAssemblyReference.cache
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.Form1.resources
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.Properties.Resources.resources
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.csproj.GenerateResource.Cache
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.exe
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.pdb
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\bin\Debug\aa-DJ\TGFFConverter.resources.dll
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.InfoForm.resources
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\TGFFConverter.InfoForm.aa-DJ.resources
+E:\Dropbox\My Documents\Journal Papers\Jornal of Microsystems\New Results\TGFFConverter\TGFFConverter\obj\Debug\aa-DJ\TGFFConverter.resources.dll
