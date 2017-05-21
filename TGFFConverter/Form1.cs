@@ -30,7 +30,8 @@ namespace TGFFConverter
             Transpose_Matrix,
             Tornado,
             Neighbour,
-            Hot_Spot
+            Hot_Spot,
+            Stencil
         }
 
         public Form1()
@@ -531,8 +532,58 @@ namespace TGFFConverter
                                 destinationId = Convert.ToString(unluckyCore, 2);
                                 break;
                             }
+                        case (int)trafficType.Stencil:
+                            {
+                                // Stencil Selected
+                                if(source < (noOfCores - k))
+                                {
+                                    // Not the last row. Carry on...
+                                    if ((source + 1) % k == 0)
+                                    {
+                                        // Last column
+                                        Edge e1 = new Edge();
+                                        e1.edgeID = edges.Count;
+                                        e1.start = source;
+                                        e1.volume = packetSize;
+                                        e1.end = source + k - 1;
+                                        edges.Add(e1);
+                                    }
+                                    else if (source % k == 0)
+                                    {
+                                        // First column
+                                        Edge e1 = new Edge();
+                                        e1.edgeID = edges.Count;
+                                        e1.start = source;
+                                        e1.volume = packetSize;
+                                        e1.end = source + k + 1;
+                                        edges.Add(e1);
+                                    }
+                                    else
+                                    {
+                                        Edge e1 = new Edge();
+                                        e1.edgeID = edges.Count;
+                                        e1.start = source;
+                                        e1.volume = packetSize;
+                                        e1.end = source + k - 1;
+                                        edges.Add(e1);
+                                        Edge e3 = new Edge();
+                                        e3.edgeID = edges.Count;
+                                        e3.start = source;
+                                        e3.volume = packetSize;
+                                        e3.end = source + k + 1;
+                                        edges.Add(e3);
+                                    }
+                                    Edge e2 = new Edge();
+                                    e2.edgeID = edges.Count;
+                                    e2.start = source;
+                                    e2.volume = packetSize;
+                                    e2.end = source + k;
+                                    edges.Add(e2);
+                                }
+                                break;
+                            }
                     }
-                    if (trafficTypeBox.SelectedIndex != (int)trafficType.Random && trafficTypeBox.SelectedIndex != (int)trafficType.Random_Modal)
+                    if (trafficTypeBox.SelectedIndex != (int)trafficType.Random && trafficTypeBox.SelectedIndex != (int)trafficType.Stencil && trafficTypeBox.SelectedIndex != (int)trafficType.Random_Modal)
                     {
                         ee.end = Convert.ToInt32(destinationId, 2);
                         if (ee.end < noOfCores && destinationId != sourceId)

@@ -34,25 +34,25 @@
             this.inputBrowseBtn = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.convertBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.autoGenBtn = new System.Windows.Forms.Button();
+            this.sizeTxtBox = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.modeTxtBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.infoBtn = new System.Windows.Forms.PictureBox();
             this.coresTxtBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.generateBtn = new System.Windows.Forms.Button();
             this.trafficTypeBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.modeTxtBox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.sizeTxtBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.autoGenBtn = new System.Windows.Forms.Button();
-            this.infoBtn = new System.Windows.Forms.PictureBox();
-            this.generateBtn = new System.Windows.Forms.Button();
-            this.convertBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoBtn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -105,6 +105,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "TGFF Converter";
             // 
+            // convertBtn
+            // 
+            this.convertBtn.Image = global::TGFFConverter.Properties.Resources.Arrow_Up_icon;
+            this.convertBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.convertBtn.Location = new System.Drawing.Point(292, 49);
+            this.convertBtn.Name = "convertBtn";
+            this.convertBtn.Size = new System.Drawing.Size(85, 40);
+            this.convertBtn.TabIndex = 6;
+            this.convertBtn.Text = "Convert";
+            this.convertBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.convertBtn.UseVisualStyleBackColor = true;
+            this.convertBtn.Click += new System.EventHandler(this.convertBtn_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.autoGenBtn);
@@ -125,6 +138,66 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Coregraph Generator";
             // 
+            // autoGenBtn
+            // 
+            this.autoGenBtn.Image = global::TGFFConverter.Properties.Resources.rocket_launch_run_icon;
+            this.autoGenBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.autoGenBtn.Location = new System.Drawing.Point(161, 59);
+            this.autoGenBtn.Name = "autoGenBtn";
+            this.autoGenBtn.Size = new System.Drawing.Size(115, 40);
+            this.autoGenBtn.TabIndex = 16;
+            this.autoGenBtn.Text = "Auto-Generate";
+            this.autoGenBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.autoGenBtn.UseVisualStyleBackColor = true;
+            this.autoGenBtn.Click += new System.EventHandler(this.autoGenBtn_Click);
+            // 
+            // sizeTxtBox
+            // 
+            this.sizeTxtBox.Location = new System.Drawing.Point(77, 76);
+            this.sizeTxtBox.MaxLength = 10;
+            this.sizeTxtBox.Name = "sizeTxtBox";
+            this.sizeTxtBox.Size = new System.Drawing.Size(67, 20);
+            this.sizeTxtBox.TabIndex = 14;
+            this.sizeTxtBox.Text = "200";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 79);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(67, 13);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "Packet Size:";
+            // 
+            // modeTxtBox
+            // 
+            this.modeTxtBox.Location = new System.Drawing.Point(77, 50);
+            this.modeTxtBox.MaxLength = 10;
+            this.modeTxtBox.Name = "modeTxtBox";
+            this.modeTxtBox.Size = new System.Drawing.Size(67, 20);
+            this.modeTxtBox.TabIndex = 12;
+            this.modeTxtBox.Text = "3";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 53);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(64, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "# of Modes:";
+            // 
+            // infoBtn
+            // 
+            this.infoBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.infoBtn.Image = global::TGFFConverter.Properties.Resources.Status_dialog_information_icon;
+            this.infoBtn.Location = new System.Drawing.Point(211, 21);
+            this.infoBtn.Name = "infoBtn";
+            this.infoBtn.Size = new System.Drawing.Size(25, 25);
+            this.infoBtn.TabIndex = 11;
+            this.infoBtn.TabStop = false;
+            this.infoBtn.Click += new System.EventHandler(this.infoBtn_Click);
+            // 
             // coresTxtBox
             // 
             this.coresTxtBox.Location = new System.Drawing.Point(310, 23);
@@ -143,6 +216,19 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "# of Cores:";
             // 
+            // generateBtn
+            // 
+            this.generateBtn.Image = global::TGFFConverter.Properties.Resources.science_chemistry_icon;
+            this.generateBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.generateBtn.Location = new System.Drawing.Point(282, 58);
+            this.generateBtn.Name = "generateBtn";
+            this.generateBtn.Size = new System.Drawing.Size(95, 40);
+            this.generateBtn.TabIndex = 8;
+            this.generateBtn.Text = "Generate";
+            this.generateBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.generateBtn.UseVisualStyleBackColor = true;
+            this.generateBtn.Click += new System.EventHandler(this.generateBtn_Click);
+            // 
             // trafficTypeBox
             // 
             this.trafficTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -155,7 +241,8 @@
             "Transpose Matrix",
             "Tornado",
             "Neighbour",
-            "Hot Spot"});
+            "Hot Spot",
+            "Stencil"});
             this.trafficTypeBox.Location = new System.Drawing.Point(77, 23);
             this.trafficTypeBox.Name = "trafficTypeBox";
             this.trafficTypeBox.Size = new System.Drawing.Size(128, 21);
@@ -181,42 +268,6 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "By: Muhammad Obaidullah";
             // 
-            // modeTxtBox
-            // 
-            this.modeTxtBox.Location = new System.Drawing.Point(77, 50);
-            this.modeTxtBox.MaxLength = 10;
-            this.modeTxtBox.Name = "modeTxtBox";
-            this.modeTxtBox.Size = new System.Drawing.Size(67, 20);
-            this.modeTxtBox.TabIndex = 12;
-            this.modeTxtBox.Text = "3";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 53);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(64, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "# of Modes:";
-            // 
-            // sizeTxtBox
-            // 
-            this.sizeTxtBox.Location = new System.Drawing.Point(77, 76);
-            this.sizeTxtBox.MaxLength = 10;
-            this.sizeTxtBox.Name = "sizeTxtBox";
-            this.sizeTxtBox.Size = new System.Drawing.Size(67, 20);
-            this.sizeTxtBox.TabIndex = 14;
-            this.sizeTxtBox.Text = "200";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 79);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 13);
-            this.label7.TabIndex = 15;
-            this.label7.Text = "Packet Size:";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::TGFFConverter.Properties.Resources.MadHatter_icon;
@@ -225,56 +276,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(100, 99);
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
-            // 
-            // autoGenBtn
-            // 
-            this.autoGenBtn.Image = global::TGFFConverter.Properties.Resources.rocket_launch_run_icon;
-            this.autoGenBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.autoGenBtn.Location = new System.Drawing.Point(161, 59);
-            this.autoGenBtn.Name = "autoGenBtn";
-            this.autoGenBtn.Size = new System.Drawing.Size(115, 40);
-            this.autoGenBtn.TabIndex = 16;
-            this.autoGenBtn.Text = "Auto-Generate";
-            this.autoGenBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.autoGenBtn.UseVisualStyleBackColor = true;
-            this.autoGenBtn.Click += new System.EventHandler(this.autoGenBtn_Click);
-            // 
-            // infoBtn
-            // 
-            this.infoBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.infoBtn.Image = global::TGFFConverter.Properties.Resources.Status_dialog_information_icon;
-            this.infoBtn.Location = new System.Drawing.Point(211, 21);
-            this.infoBtn.Name = "infoBtn";
-            this.infoBtn.Size = new System.Drawing.Size(25, 25);
-            this.infoBtn.TabIndex = 11;
-            this.infoBtn.TabStop = false;
-            this.infoBtn.Click += new System.EventHandler(this.infoBtn_Click);
-            // 
-            // generateBtn
-            // 
-            this.generateBtn.Image = global::TGFFConverter.Properties.Resources.science_chemistry_icon;
-            this.generateBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.generateBtn.Location = new System.Drawing.Point(282, 58);
-            this.generateBtn.Name = "generateBtn";
-            this.generateBtn.Size = new System.Drawing.Size(95, 40);
-            this.generateBtn.TabIndex = 8;
-            this.generateBtn.Text = "Generate";
-            this.generateBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.generateBtn.UseVisualStyleBackColor = true;
-            this.generateBtn.Click += new System.EventHandler(this.generateBtn_Click);
-            // 
-            // convertBtn
-            // 
-            this.convertBtn.Image = global::TGFFConverter.Properties.Resources.Arrow_Up_icon;
-            this.convertBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.convertBtn.Location = new System.Drawing.Point(292, 49);
-            this.convertBtn.Name = "convertBtn";
-            this.convertBtn.Size = new System.Drawing.Size(85, 40);
-            this.convertBtn.TabIndex = 6;
-            this.convertBtn.Text = "Convert";
-            this.convertBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.convertBtn.UseVisualStyleBackColor = true;
-            this.convertBtn.Click += new System.EventHandler(this.convertBtn_Click);
             // 
             // Form1
             // 
@@ -295,8 +296,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoBtn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
